@@ -1,0 +1,29 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Rudra Innovative ",
+  "main": "index.js",
+  "scripts": {
+    "test": "MERN",
+    "start": "nodemon src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ProgrammingYatra/RudraInnovative.git"
+  },
+  "keywords": [
+    "MERN",
+    "Stack"
+  ],
+  "author": "Rupam Gupta",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ProgrammingYatra/RudraInnovative/issues"
+  },
+  "homepage": "https://github.com/ProgrammingYatra/RudraInnovative#readme",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "mongoose": "^7.2.0"
+  }
+}
