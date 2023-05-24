@@ -122,7 +122,6 @@ exports.deleteMyProfile = catchAsyncError(async (req, res, next) => {
   });
 });
 
-
 exports.myProfile = catchAsyncError(async (req, res, next) => {
   const user = await userModel.findById(req.user._id);
 
