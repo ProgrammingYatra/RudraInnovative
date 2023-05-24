@@ -30,7 +30,7 @@ const Register = () => {
     <div className="register">
       <form className="registerForm" onSubmit={submitHandler}>
         <Typography variant="h3" style={{ padding: "2vmax" }}>
-          Social Aap
+          Register Here
         </Typography>
 
         <input

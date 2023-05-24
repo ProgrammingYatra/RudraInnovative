@@ -7,7 +7,7 @@ export const loginUser = (email, password) => async (dispatch) => {
     });
 
     const { data } = await axios.post(
-      "/api/v1/login",
+      "http://localhost:4000/api/v1/login",
       { email, password },
       {
         headers: {
@@ -34,7 +34,7 @@ export const loadUser = () => async (dispatch) => {
       type: "LoadUserRequest",
     });
 
-    const { data } = await axios.get("/api/v1/me");
+    const { data } = await axios.get("http://localhost:4000/api/v1/me");
 
     dispatch({
       type: "LoadUserSuccess",
@@ -75,7 +75,7 @@ export const logoutUser = () => async (dispatch) => {
       type: "LogoutUserRequest",
     });
 
-    await axios.get("/api/v1/logout");
+    await axios.get("http://localhost:4000/api/v1/logout");
 
     dispatch({
       type: "LogoutUserSuccess",
@@ -89,15 +89,15 @@ export const logoutUser = () => async (dispatch) => {
 };
 
 export const registerUser =
-  (name, email, password, avatar) => async (dispatch) => {
+  (name, email, password, phone) => async (dispatch) => {
     try {
       dispatch({
         type: "RegisterRequest",
       });
 
       const { data } = await axios.post(
-        "/api/v1/register",
-        { name, email, password, avatar },
+        "http://localhost:4000/api/v1/register",
+        { name, email, password, phone },
         {
           headers: {
             "Content-Type": "application/json",
@@ -124,7 +124,7 @@ export const updateProfile = (name, email, avatar) => async (dispatch) => {
     });
 
     const { data } = await axios.put(
-      "/api/v1/update/profile",
+      "http://localhost:4000/api/v1/update/profile",
       { name, email, avatar },
       {
         headers: {
@@ -153,7 +153,7 @@ export const updatePassword =
       });
 
       const { data } = await axios.put(
-        "/api/v1/update/password",
+        "http://localhost:4000/api/v1/update/password",
         { oldPassword, newPassword },
         {
           headers: {
@@ -180,7 +180,7 @@ export const deleteMyProfile = () => async (dispatch) => {
       type: "deleteProfileRequest",
     });
 
-    const { data } = await axios.delete("/api/v1/delete/me");
+    const { data } = await axios.delete("http://localhost:4000/api/v1/delete/me");
 
     dispatch({
       type: "deleteProfileSuccess",
@@ -201,7 +201,7 @@ export const forgotPassword = (email) => async (dispatch) => {
     });
 
     const { data } = await axios.post(
-      "/api/v1/forgot/password",
+      "http://localhost:4000/api/v1/forgot/password",
       {
         email,
       },
@@ -231,7 +231,7 @@ export const resetPassword = (token, password) => async (dispatch) => {
     });
 
     const { data } = await axios.put(
-      `/api/v1/password/reset/${token}`,
+      `http://localhost:4000/api/v1/password/reset/${token}`,
       {
         password,
       },
@@ -260,7 +260,7 @@ export const getUserProfile = (id) => async (dispatch) => {
       type: "userProfileRequest",
     });
 
-    const { data } = await axios.get(`/api/v1/user/${id}`);
+    const { data } = await axios.get(`http://localhost:4000/api/v1/user/${id}`);
     dispatch({
       type: "userProfileSuccess",
       payload: data.user,

@@ -9,6 +9,13 @@ import { loadUser } from "./action/User";
 import NotFound from "./pages/notfound/NotFound";
 import Home from "./pages/home/Home";
 import Register from "./components/register/Register";
+import ForgotPassword from "./components/forgotPassword/ForgotPassword";
+import UpdatePassword from "./components/updatePassword/UpdatePassword";
+import ResetPassword from "./components/resetPassword/ResetPassword";
+import UpdateProfile from "./components/updateProfile/UpdateProfile";
+import About from "./pages/about/About";
+import Logout from "./pages/logout/Logout";
+import UserProfile from "./components/userProfile/UserProfile";
 
 function App() {
   <ToastContainer />;
@@ -28,19 +35,40 @@ function App() {
 
         <Route
           path="/register"
-          element={isAuthenticated ? null : <Register />}
+          element={isAuthenticated ? <Home/> : <Register />}
         />
 
-
-        {/* <Route
+        <Route
           path="/update/profile"
           element={isAuthenticated ? <UpdateProfile /> : <Login />}
+        />
+        <Route
+          path="/about"
+          element={isAuthenticated && <About /> }
+        />
+        <Route
+          path="/logout"
+          element={isAuthenticated && <Logout /> }
+        />
+        <Route
+          path="/user"
+          element={isAuthenticated && <UserProfile /> }
         />
 
         <Route
           path="/user/:id"
           element={isAuthenticated ? <UserProfile /> : <Login />}
-        /> */}
+        />
+
+        <Route
+          path="/forgot/password"
+          element={isAuthenticated ? <UpdatePassword /> : <ForgotPassword />}
+        />
+
+        <Route
+          path="/password/reset/:token"
+          element={isAuthenticated ? <UpdatePassword /> : <ResetPassword />}
+        />
 
         <Route path="*" element={<NotFound />} />
       </Routes>
