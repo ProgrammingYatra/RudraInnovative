@@ -1,9 +1,12 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
 
-const registrationSchema = new mongoose.Schema({
-  FirstName: {
+const userSchema = new mongoose.Schema({
+  name: {
     type: String,
-    required: [true, "Please Provide a First Name"],
+    required: [true, "Enter Your  Name"],
     validate: {
       validator: function (name) {
         return /^[a-zA-Z\. ]*$/.test(name);
@@ -11,19 +14,20 @@ const registrationSchema = new mongoose.Schema({
       message: "Please Provide a Valid Name",
     },
   },
-  LastName: {
-    type: String,
-    required: [true, "Please Provide a Last Name"],
+  phone: {
+    type: Number,
+    required: [true, "Enter Your  Number"],
     validate: {
-      validator: function (name) {
-        return /^[a-zA-Z\. ]*$/.test(name);
+      validator: function (Mobile) {
+        return /^[6-9]\d{9}$/.test(Mobile);
       },
-      message: "Please Provide a Valid Last Name",
+      message: "Please Provide a Indian Phone No.",
     },
   },
-  Email: {
+  email: {
     type: String,
-    required: [true, "Please Provide a Email"],
+    required: [true, "Enter your Email"],
+    unique: [true, "Email Already Registered"],
     validate: {
       validator: function (email) {
         return /^([A-Za-z0-9._]{3,}@[A-Za-z]{3,}[.]{1}[A-Za-z.]{2,6})+$/.test(
@@ -33,29 +37,49 @@ const registrationSchema = new mongoose.Schema({
       message: "Please Provide a Valid Email",
     },
   },
-  Phone: {
+  password: {
     type: String,
-    required: [true, "Please Provide a Phone"],
-    validate: {
-      validator: function (Mobile) {
-        return /^[6-9]\d{9}$/.test(Mobile);
-      },
-      message: "Please Provide a Indian Phone No.",
-    },
+    required: [true, "Enter your Password"],
+    minLength: [6, "Enter Minimum Length of 6 Character"],
   },
-  Password: {
-    type: String,
-    required: [true, "Please Provide a Password"],
-    validate: {
-      validator: function (pass) {
-        return /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,15}$/.test(
-          pass
-        );
-      },
-      message:
-        "Password should contain 1 special Character and One Alphabets and One Number",
-    },
-  },
+
+  resetPasswordToken: String,
+  resetPasswordExpire: Date,
 });
 
-module.exports = mongoose.model("Registration", registrationSchema);
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) {
+    next();
+  }
+
+  this.password = await bcrypt.hash(this.password, 10);
+});
+
+// JWT TOKEN
+userSchema.methods.getJWTToken = function () {
+  return jwt.sign({ _id: this._id }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRE,
+  });
+};
+
+// Compare Password
+
+userSchema.methods.comparePassword = async function (password) {
+  return await bcrypt.compare(password, this.password);
+};
+
+// Generating Password Reset Token
+userSchema.methods.getResetPasswordToken = function () {
+  // Generating Token
+  const resetToken = crypto.randomBytes(20).toString("hex");
+  // Hashing and adding resetPasswordToken to userSchema
+  this.resetPasswordToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
+
+  this.resetPasswordExpire = Date.now() + 15 * 60 * 1000;
+  return resetToken;
+};
+
+module.exports = mongoose.model("User", userSchema);

@@ -1,11 +1,32 @@
-const express=require("express");
-const { createUser, loginUser } = require("../controllers/userController");
-const { authentication, authorization } = require("../middlewares/auth");
-const  router=express.Router();
+const express = require("express");
+const {
+  registerUser,
+  loginUser,
+  logout,
+  updatePassword,
+  updateProfile,
+  deleteMyProfile,
+  myProfile,
+  getAllUsers,
+  forgotPassword,
+  resetPassword,
+} = require("../controllers/user");
+const { isAuthenticated } = require("../middlewares/auth");
 
-router.route("/register").post(createUser)
+const router = express.Router();
 
-router.route("/login").post(loginUser)
+router.route("/register").post(registerUser);
+router.route("/login").post(loginUser);
+router.route("/logout").get(isAuthenticated, logout);
 
+router.route("/update/password").put(isAuthenticated, updatePassword);
+router.route("/update/profile").put(isAuthenticated, updateProfile);
+router.route("/delete/me").delete(isAuthenticated, deleteMyProfile);
 
-module.exports=router;
+router.route("/me").get(isAuthenticated, myProfile);
+router.route("/users").get(isAuthenticated, getAllUsers);
+
+router.route("/forgot/password").post(forgotPassword);
+router.route("/password/reset/:token").put(resetPassword);
+
+module.exports = router;
